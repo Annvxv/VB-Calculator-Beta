@@ -107,44 +107,41 @@ Public Class Form1
 
     Private Sub button4_Click(sender As Object, e As EventArgs) Handles button4.Click
         numerodos = Val(textBox1.Text)
-        If operacion = 2 Then
-            total = numerouno + numerodos
-            textBox1.Text = total
-        ElseIf operacion = 3 Then
-            total = numerouno - numerodos
-            textBox1.Text = total
-        ElseIf operacion = 4 Then
-            total = numerouno * numerodos
-            textBox1.Text = total
-        ElseIf operacion = 5 Then
-            total = numerouno / numerodos
-            textBox1.Text = total
-        End If
+
+        Select Case operacion
+            Case 2
+                total = numerouno + numerodos
+            Case 3
+                total = numerouno - numerodos
+            Case 4
+                total = numerouno * numerodos
+            Case 5
+                If numerodos <> 0 Then
+                    total = numerouno / numerodos
+                Else
+                    textBox1.Text = "Error"
+                    Exit Sub
+                End If
+            Case Else
+                Exit Sub
+        End Select
+
+        textBox1.Text = total
+        operacion = 0 ' Reinicia operación después de calcular
     End Sub
 
     Private Sub button2_Click(sender As Object, e As EventArgs) Handles button2.Click
 
-        If textBox1.Text = "" Or Not IsNumeric(textBox1.Text) Then
-            textBox1.Text = "Error"
+        If Val(textBox1.Text) < 0 Then
+            MsgBox("No se puede calcular la raíz de un número negativo")
             Exit Sub
         End If
 
-        Dim numeroActual As Double = Val(textBox1.Text)
-
-        If numeroActual < 0 Then
-            textBox1.Text = "Error"
-            Exit Sub
-        End If
-
-        numeroActual = Math.Sqrt(numeroActual)
-
-        ' Forzar que si es muy pequeño, no lo redondee a 1
-        If numeroActual < 0.0000001 Then
-            textBox1.Text = "0"
-        Else
-            textBox1.Text = numeroActual.ToString()
-        End If
+        numerouno = Val(textBox1.Text)
+        textBox1.Text = Math.Sqrt(numerouno).ToString()
+        operacion = 0 ' Reinicia operación para evitar errores
     End Sub
+
 
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -152,35 +149,15 @@ Public Class Form1
     End Sub
 
     Private Sub button3_Click(sender As Object, e As EventArgs) Handles button3.Click
-        If operacion = 0 Then
-            ' Solo hay un número, calcula su porcentaje directamente
-            textBox1.Text = Val(textBox1.Text) / 100
-            Exit Sub
+
+        If textBox1.Text <> "" Then
+            Dim valorActual As Double = Val(textBox1.Text)
+            textBox1.Text = (valorActual / 100).ToString()
+            operacion = 0 ' Reinicia operación
         End If
-
-        numerodos = Val(textBox1.Text)
-
-        Select Case operacion
-            Case 2 ' Suma
-                total = numerouno + (numerouno * numerodos / 100)
-            Case 3 ' Resta
-                total = numerouno - (numerouno * numerodos / 100)
-            Case 4 ' Multiplicación
-                total = numerouno * (numerodos / 100)
-            Case 5 ' División
-                If numerodos <> 0 Then
-                    total = numerouno / (numerodos / 100)
-                Else
-                    textBox1.Text = "Error"
-                    Exit Sub
-                End If
-            Case Else
-                textBox1.Text = "Error"
-                Exit Sub
-        End Select
-
-        textBox1.Text = total
     End Sub
+
+
 
     Private Sub button1_Click(sender As Object, e As EventArgs) Handles button1.Click
         button16.Enabled = True
